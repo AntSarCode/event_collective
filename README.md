@@ -101,6 +101,6 @@ $ uvicorn main:app --reload
 
 ---
 
-## 🤝 License
+## 🤝 License+
 
 MIT License © 2025 Event Collective Development Team

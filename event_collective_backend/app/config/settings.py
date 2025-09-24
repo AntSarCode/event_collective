@@ -1,7 +1,6 @@
 from functools import lru_cache
 import pydantic
 
-
 class Settings(pydantic.BaseSettings):
     app_name: str = "Event Collective Backend"
     debug: bool = False

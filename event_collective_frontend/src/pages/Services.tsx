@@ -9,9 +9,10 @@ export default function Services() {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await api.get<ServiceItem[]>("/services");
+        const { data } = await api.get<ServiceItem[]>("/services/all");
         setItems(data);
-      } catch (e: any) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
         setErr("Couldn’t load services. Showing placeholders.");
         setItems([
           { id: 1, name: "Wedding Coordination", description: "Day-of + vendor mgmt." },

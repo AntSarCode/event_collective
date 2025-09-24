@@ -5,7 +5,7 @@ type ContactForm = { name: string; email: string; message: string };
 export default function Contact() {
   const { register, handleSubmit, reset } = useForm<ContactForm>();
   const onSubmit = handleSubmit(async (data) => {
-    await api.post("/contact", data);
+    await api.post("/contact/submit", data);
     alert("Thanks! We’ll be in touch.");
     reset();
   });

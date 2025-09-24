@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios, { AxiosHeaders, type InternalAxiosRequestConfig } from "axios";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_BASE || "https://event-collective.onrender.com/api";
 
 export const api = axios.create({
   baseURL: API_BASE,
@@ -10,12 +10,13 @@ export const api = axios.create({
   },
 });
 
-// Inject JWT if present
-api.interceptors.request.use((config) => {
+// Inject JWT if present using AxiosHeaders (no 'any', no assignment type errors)
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("ec_token");
-  if (token) {
-    config.headers = config.headers || {};
-    (config.headers as any).Authorization = `Bearer ${token}`;
-  }
+  if (!token) return config;
+
+  const headers = AxiosHeaders.from(config.headers || {});
+  headers.set("Authorization", `Bearer ${token}`);
+  config.headers = headers;
   return config;
 });

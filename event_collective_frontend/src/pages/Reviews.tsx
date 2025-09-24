@@ -8,7 +8,7 @@ export default function Reviews() {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await api.get<Review[]>("/reviews", { params: { limit: 10 } });
+        const { data } = await api.get<Review[]>("/reviews/all", { params: { limit: 10 } });
         setItems(data);
       } catch {
         setItems([]);
