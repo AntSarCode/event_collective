@@ -14,7 +14,7 @@ api_router.include_router(reviews.router)
 api_router.include_router(contact.router)
 
 # Protected
-api_router.include_router(dashboard.router)
+api_router.include_router(dashboard.router)  # dashboard now serves /dashboard/overview
 
 # Admin
 api_router.include_router(admin_calendar.router)
