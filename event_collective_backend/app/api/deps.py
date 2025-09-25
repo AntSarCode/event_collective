@@ -8,6 +8,7 @@ from app.models.user import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
+
 def get_db():
     db = SessionLocal()
     try:
@@ -15,20 +16,22 @@ def get_db():
     finally:
         db.close()
 
-credentials_exception = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Could not validate credentials",
-    headers={"WWW-Authenticate": "Bearer"},
-)
 
 def get_current_user(
     token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_db)
 ) -> User:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
     user = auth_service.verify_access_token(token, db)
     if not user:
         raise credentials_exception
     return user
+
 
 def get_current_admin_user(
     current_user: User = Depends(get_current_user)

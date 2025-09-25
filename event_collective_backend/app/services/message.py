@@ -13,9 +13,3 @@ def create_admin_message(db: Session, message_in: AdminMessageCreate) -> AdminMe
 
 def get_all_admin_messages(db: Session) -> List[AdminMessage]:
     return db.query(AdminMessage).order_by(AdminMessage.received_at.desc()).all()
-
-def delete_admin_message(db: Session, message_id: int) -> None:
-    msg = db.query(AdminMessage).filter(AdminMessage.id == message_id).first()
-    if msg:
-        db.delete(msg)
-        db.commit()

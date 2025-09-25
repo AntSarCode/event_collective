@@ -1,16 +1,26 @@
 from datetime import datetime
-from pydantic import BaseModel
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
 
-class CalendarEventCreate(BaseModel):
+class CalendarEventBase(BaseModel):
     title: str
+    description: Optional[str] = None
     start_time: datetime
     end_time: datetime
-    description: str | None = None
-    location: str | None = None
+    location: Optional[str] = None
+    model_config = ConfigDict(from_attributes=True)
 
-class CalendarEventRead(CalendarEventCreate):
+class CalendarEventCreate(CalendarEventBase):
+    pass
+
+class CalendarEventUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+    location: Optional[str] = None
+    model_config = ConfigDict(from_attributes=True)
+
+class CalendarEventRead(CalendarEventBase):
     id: int
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

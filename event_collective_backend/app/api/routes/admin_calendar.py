@@ -1,42 +1,38 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from app.schemas.calendar import CalendarEventCreate, CalendarEventRead, CalendarEventUpdate
+from app.database import get_db
+from app.schemas.calendar import CalendarEventCreate, CalendarEventUpdate, CalendarEventRead
 from app.services import calendar_service
-from app.api.deps import get_current_admin_user, get_db
 
-router = APIRouter()
+router = APIRouter(prefix='/admin/calendar', tags=['admin-calendar'])
 
-@router.get("/", response_model=List[CalendarEventRead])
-def get_all_events(
-    db: Session = Depends(get_db),
-    admin_user=Depends(get_current_admin_user)
-):
+@router.get('/', response_model=List[CalendarEventRead])
+def list_events(db: Session = Depends(get_db)):
     return calendar_service.get_all_events(db)
 
-@router.post("/", response_model=CalendarEventRead, status_code=status.HTTP_201_CREATED)
-def create_event(
-    event_in: CalendarEventCreate,
-    db: Session = Depends(get_db),
-    admin_user=Depends(get_current_admin_user)
-):
-    return calendar_service.create_event(db, event_in)
+@router.post('/', response_model=CalendarEventRead)
+def post_event(data: CalendarEventCreate, db: Session = Depends(get_db)):
+    return calendar_service.create_event(db, data)
 
-@router.put("/{event_id}", response_model=CalendarEventRead)
-def update_event(
-    event_id: int,
-    event_in: CalendarEventUpdate,
-    db: Session = Depends(get_db),
-    admin_user=Depends(get_current_admin_user)
-):
-    return calendar_service.update_event(db, event_id, event_in)
+@router.get('/{event_id}', response_model=CalendarEventRead)
+def get_event(event_id: int, db: Session = Depends(get_db)):
+    ev = calendar_service.get_event_by_id(db, event_id)
+    if not ev:
+        raise HTTPException(status_code=404, detail='Event not found')
+    return ev
 
-@router.delete("/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_event(
-    event_id: int,
-    db: Session = Depends(get_db),
-    admin_user=Depends(get_current_admin_user)
-):
-    calendar_service.delete_event(db, event_id)
-    return None
+@router.put('/{event_id}', response_model=CalendarEventRead)
+def put_event(event_id: int, data: CalendarEventUpdate, db: Session = Depends(get_db)):
+    ev = calendar_service.update_event(db, event_id, data)
+    if not ev:
+        raise HTTPException(status_code=404, detail='Event not found')
+    return ev
+
+@router.delete('/{event_id}')
+def delete_event(event_id: int, db: Session = Depends(get_db)):
+    ok = calendar_service.delete_event(db, event_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail='Event not found')
+    return {'ok': True}

@@ -1,12 +1,12 @@
+from app.config import get_settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.api_router import api_router
 from app.core.events import register_events
-from app.config import get_settings
+from app.config.settings import get_settings
 
 settings = get_settings()
-
 app = FastAPI(title=settings.app_name, debug=settings.debug)
 
 # Register startup/shutdown
