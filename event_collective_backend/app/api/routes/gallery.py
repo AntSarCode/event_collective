@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.api.deps import get_db
-from app.schemas.gallery import GalleryImageCreate, GalleryImageRead
+from app.schemas.gallery import GalleryImageRead
 from app.services import gallery_service
 
 router = APIRouter(prefix="/gallery", tags=["gallery"])

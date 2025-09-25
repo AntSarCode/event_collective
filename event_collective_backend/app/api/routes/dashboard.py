@@ -13,7 +13,6 @@ def get_dashboard_overview(
     current_user: User = Depends(get_current_user),
 ):
     try:
-        # Minimal placeholder payload; expand with real stats later
         return {
             "user": {
                 "id": current_user.id,
