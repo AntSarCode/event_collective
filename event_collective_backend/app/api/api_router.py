@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.api.routes import (
     auth, dashboard, gallery, services, reviews,
-    contact, admin_calendar, admin_messages
+    contact, admin_calendar, admin_messages, health
 )
 
 api_router = APIRouter()
@@ -19,3 +19,4 @@ api_router.include_router(dashboard.router)  # dashboard now serves /dashboard/o
 # Admin
 api_router.include_router(admin_calendar.router)
 api_router.include_router(admin_messages.router)
+api_router.include_router(health.router, tags=["health"])
