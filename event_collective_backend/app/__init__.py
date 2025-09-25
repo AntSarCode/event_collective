@@ -1,10 +1,3 @@
-"""
-Core application logic for the Event Collective backend.
+from app.config import get_settings
 
-This package includes:
-- Security and JWT utilities
-- Custom exceptions
-- Application-level event hooks (startup/shutdown)
-- Logging configuration
-- Optional: DB seeding or initialization logic
-"""
+__all__ = ["get_settings"]

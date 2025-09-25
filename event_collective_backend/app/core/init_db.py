@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from app.models.user import User
 from app.core.security import get_password_hash
-
 
 async def init_db(session: AsyncSession):
     admin_exists = await session.execute(

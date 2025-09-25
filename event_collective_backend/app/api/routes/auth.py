@@ -3,13 +3,13 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db, get_current_user
-from app.services import authenticate_user, create_access_token
+from app.services.auth import authenticate_user, generate_access_token
 from app.schemas.user import Token, UserRead
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.get("/me", response_model=UserRead)
-def me(current_user = Depends(get_current_user)):
+def me(current_user: UserRead = Depends(get_current_user)):
     return current_user
 
 @router.post("/login", response_model=Token)
@@ -24,11 +24,9 @@ def login(
             detail="Invalid username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token = create_access_token(user.id)
+    access_token = generate_access_token(user.id)
     return {"access_token": access_token, "token_type": "bearer"}
-
 
 @router.post("/logout")
 def logout():
-    # Placeholder for token blacklist or session cleanup if needed
     return {"msg": "Successfully logged out"}
