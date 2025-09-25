@@ -1,15 +1,18 @@
 from fastapi import FastAPI
-from app.database import engine
-from app.core.init_db import init_db
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import text
+
+from app.database import engine, init_models
 
 
-def register_events(app: FastAPI):
+def register_events(app: FastAPI) -> None:
     @app.on_event("startup")
-    async def startup_event():
-        async with AsyncSession(bind=engine) as session:
-            await init_db(session)
+    def startup_event() -> None:
+        # Ensure DB schema is present and DB is reachable (SYNC engine)
+        init_models()
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
 
     @app.on_event("shutdown")
-    async def shutdown_event():
-        print("Shutting down cleanly.")
+    def shutdown_event() -> None:
+        # Nothing special needed for sync engine
+        pass
