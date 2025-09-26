@@ -41,9 +41,14 @@ def get_db():
 
 def init_models() -> None:
     # Import models so SQLAlchemy sees the tables
-    from app.models import (
-        calendar, contact_message, event, gallery, message, review, service, user  # noqa: F401
-    )
+    import app.models.calendar  # noqa: F401
+    import app.models.contact_message  # noqa: F401
+    import app.models.event  # noqa: F401
+    import app.models.gallery  # noqa: F401
+    import app.models.message  # noqa: F401
+    import app.models.review  # noqa: F401
+    import app.models.service  # noqa: F401
+    import app.models.user  # noqa: F401
     Base.metadata.create_all(bind=engine)
 
 __all__ = ['engine', 'SessionLocal', 'Base', 'get_db', 'init_models']
