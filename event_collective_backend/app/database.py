@@ -41,7 +41,6 @@ def get_db():
 
 def init_models() -> None:
     # Import models so SQLAlchemy sees the tables
-    import app.models.calendar  # noqa: F401
     import app.models.contact_message  # noqa: F401
     import app.models.event  # noqa: F401
     import app.models.gallery  # noqa: F401
