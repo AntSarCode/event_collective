@@ -1,15 +1,17 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "./Navbar.tsx";
-import Footer from "./Footer.tsx";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 export default function AppLayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-white text-gray-900">
+    <>
       <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main>
+        {/* Optional hero placeholder to create elegant white space on all pages */}
+        <section style={{ padding: "48px 0 0" }} aria-hidden />
         <Outlet />
       </main>
       <Footer />
-    </div>
+    </>
   );
 }

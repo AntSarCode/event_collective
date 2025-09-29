@@ -5,6 +5,7 @@ import type { User } from "../types";
 
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -14,37 +15,56 @@ export default function Navbar() {
     })();
   }, []);
 
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `px-3 py-2 rounded-md text-sm font-medium ${isActive ? "text-black" : "text-gray-600 hover:text-black"}`;
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const linkStyle: React.CSSProperties = { letterSpacing: ".08em" };
 
   return (
-    <header className="border-b">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="font-semibold text-xl">Event Collective</Link>
-        <nav className="flex items-center gap-2">
-          <NavLink to="/" className={linkClass} end>Home</NavLink>
-          <NavLink to="/gallery" className={linkClass}>Gallery</NavLink>
-          <NavLink to="/services" className={linkClass}>Services</NavLink>
-          <NavLink to="/reviews" className={linkClass}>Reviews</NavLink>
-          <NavLink to="/contact" className={linkClass}>Contact</NavLink>
-          <NavLink to="/dashboard" className={linkClass}>Dashboard</NavLink>
-          {user?.role === "admin" && <NavLink to="/admin" className={linkClass}>Admin</NavLink>}
+    <nav className={`ec-nav ${scrolled ? "scrolled" : ""}`}>
+      <div className="container ec-nav-inner">
+        {/* Brand */}
+        <Link to="/" aria-label="The Event Collective" style={{ textDecoration: "none", color: "inherit" }}>
+          <strong style={{ letterSpacing: ".08em" }}>THE EVENT COLLECTIVE</strong>
+        </Link>
+
+        {/* Primary nav */}
+        <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
+          <NavLink to="/" end style={linkStyle}>HOME</NavLink>
+          <NavLink to="/services" style={linkStyle}>SERVICES</NavLink>
+          <NavLink to="/gallery" style={linkStyle}>GALLERY</NavLink>
+          <NavLink to="/reviews" style={linkStyle}>REVIEWS</NavLink>
+          <NavLink to="/contact" style={linkStyle}>CONTACT</NavLink>
+
+          {/* Inquire CTA echoes brand button styling */}
+          <a className="cta-btn" href="/contact" aria-label="Inquire">INQUIRE</a>
+
+          {/* Auth controls (kept minimal and on-brand) */}
           {user ? (
-            <>
-              <span className="text-sm text-gray-600 ml-2">Hi, {user.name || user.email}</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span className="muted" style={{ fontSize: 13 }}>Hi, {user.name || user.email}</span>
               <button
-                className="ml-2 text-sm underline"
                 onClick={() => { logout(); location.href = "/"; }}
+                style={{ background: "transparent", border: 0, cursor: "pointer", textDecoration: "underline", fontSize: 13 }}
+                aria-label="Logout"
               >Logout</button>
-            </>
+              {user.role === "admin" && (
+                <NavLink to="/admin" style={{ ...linkStyle, fontSize: 13 }}>ADMIN</NavLink>
+              )}
+              <NavLink to="/dashboard" style={{ ...linkStyle, fontSize: 13 }}>DASHBOARD</NavLink>
+            </div>
           ) : (
-            <>
-              <NavLink to="/login" className={linkClass}>Login</NavLink>
-              <NavLink to="/register" className={linkClass}>Sign Up</NavLink>
-            </>
+            <div style={{ display: "flex", gap: 12 }}>
+              <NavLink to="/login" style={{ ...linkStyle, fontSize: 13 }}>LOGIN</NavLink>
+              <NavLink to="/register" style={{ ...linkStyle, fontSize: 13 }}>SIGN&nbsp;UP</NavLink>
+            </div>
           )}
-        </nav>
+        </div>
       </div>
-    </header>
+    </nav>
   );
 }
