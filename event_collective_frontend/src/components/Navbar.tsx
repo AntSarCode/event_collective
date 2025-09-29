@@ -22,7 +22,15 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const linkStyle: React.CSSProperties = { letterSpacing: ".08em" };
+  const pill: React.CSSProperties = {
+    padding: "8px 14px",
+    borderRadius: 999,
+    border: "1px solid var(--ec-line)",
+    textDecoration: "none",
+    color: "var(--ec-text)",
+    letterSpacing: ".08em",
+    display: "inline-block",
+  };
 
   return (
     <nav className={`ec-nav ${scrolled ? "scrolled" : ""}`}>
@@ -32,18 +40,25 @@ export default function Navbar() {
           <strong style={{ letterSpacing: ".08em" }}>THE EVENT COLLECTIVE</strong>
         </Link>
 
-        {/* Primary nav */}
-        <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
-          <NavLink to="/" end style={linkStyle}>HOME</NavLink>
-          <NavLink to="/services" style={linkStyle}>SERVICES</NavLink>
-          <NavLink to="/gallery" style={linkStyle}>GALLERY</NavLink>
-          <NavLink to="/reviews" style={linkStyle}>REVIEWS</NavLink>
-          <NavLink to="/contact" style={linkStyle}>CONTACT</NavLink>
+        {/* Primary nav as uniform pill buttons */}
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <NavLink to="/" end style={pill}>HOME</NavLink>
+          <NavLink to="/services" style={pill}>SERVICES</NavLink>
+          <NavLink to="/gallery" style={pill}>GALLERY</NavLink>
+          <NavLink to="/reviews" style={pill}>REVIEWS</NavLink>
+          <NavLink to="/contact" style={pill}>CONTACT</NavLink>
 
-          {/* Inquire CTA echoes brand button styling */}
-          <a className="cta-btn" href="/contact" aria-label="Inquire">INQUIRE</a>
+          {/* Inquire emphasized */}
+          <a
+            className="cta-btn"
+            href="/contact"
+            aria-label="Inquire"
+            style={{ padding: "10px 16px", borderRadius: 999 }}
+          >
+            INQUIRE
+          </a>
 
-          {/* Auth controls (kept minimal and on-brand) */}
+          {/* Auth controls */}
           {user ? (
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span className="muted" style={{ fontSize: 13 }}>Hi, {user.name || user.email}</span>
@@ -53,14 +68,14 @@ export default function Navbar() {
                 aria-label="Logout"
               >Logout</button>
               {user.role === "admin" && (
-                <NavLink to="/admin" style={{ ...linkStyle, fontSize: 13 }}>ADMIN</NavLink>
+                <NavLink to="/admin" style={{ ...pill, padding: "6px 10px", fontSize: 13 }}>ADMIN</NavLink>
               )}
-              <NavLink to="/dashboard" style={{ ...linkStyle, fontSize: 13 }}>DASHBOARD</NavLink>
+              <NavLink to="/dashboard" style={{ ...pill, padding: "6px 10px", fontSize: 13 }}>DASHBOARD</NavLink>
             </div>
           ) : (
-            <div style={{ display: "flex", gap: 12 }}>
-              <NavLink to="/login" style={{ ...linkStyle, fontSize: 13 }}>LOGIN</NavLink>
-              <NavLink to="/register" style={{ ...linkStyle, fontSize: 13 }}>SIGN&nbsp;UP</NavLink>
+            <div style={{ display: "flex", gap: 8 }}>
+              <NavLink to="/login" style={{ ...pill, padding: "6px 10px", fontSize: 13 }}>LOGIN</NavLink>
+              <NavLink to="/register" style={{ ...pill, padding: "6px 10px", fontSize: 13 }}>SIGN&nbsp;UP</NavLink>
             </div>
           )}
         </div>
