@@ -3,7 +3,7 @@ import LeftRailNav from "../components/LeftRailNav";
 import Hero from "../components/Hero";
 import AboutBlurb from "../components/AboutBlurb";
 import FeatureCards from "../components/FeatureCards";
-import GalleryMarquee from "../components/GalleryMarquee";
+import GallerySlideshow from "../components/GallerySlideshow.tsx";
 import SocialBar from "../components/SocialBar";
 import { fetchHome, type HomePayload } from "../lib/api";
 
@@ -34,7 +34,7 @@ export default function Home() {
         <Hero title={s.hero_title} subtitle={s.hero_subtitle} ctaText={s.cta_text} ctaHref={s.cta_href} />
         <AboutBlurb />
         <FeatureCards services={data.services} />
-        <GalleryMarquee images={data.gallery.map(g => ({ id:g.id, url:g.url, alt_text:g.alt_text }))} />
+        <GallerySlideshow images={data.gallery.map(g => ({ id:g.id, url:g.url, alt_text:g.alt_text }))} />
         <SocialBar fb={s.fb_url} ig={s.ig_url} tt={s.tiktok_url} />
       </main>
     </div>

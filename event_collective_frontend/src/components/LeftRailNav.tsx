@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function LeftRailNav({ items }:{items:{label:string;href:string}[]}) {
   return (
-    <aside className="fixed left-0 top-0 h-screen w-20 md:w-28 flex flex-col items-center justify-between py-6">
+    <aside className="fixed top-0 left-0 h-screen w-24 bg-[#faf9f7] border-r border-gray-300 flex flex-col items-center justify-center z-40">
       <button aria-label="Menu" className="mt-2">
         <div className="w-7 h-0.5 mb-1 bg-current" />
         <div className="w-7 h-0.5 mb-1 bg-current" />

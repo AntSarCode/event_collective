@@ -1,85 +1,45 @@
-import { Link, NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getMe, logout, isAuthed } from "../services/auth";
-import type { User } from "../types";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  const [user, setUser] = useState<User | null>(null);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      if (isAuthed()) {
-        try { setUser(await getMe()); } catch { setUser(null); }
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const pill: React.CSSProperties = {
-    padding: "8px 14px",
-    borderRadius: 999,
-    border: "1px solid var(--ec-line)",
-    textDecoration: "none",
-    color: "var(--ec-text)",
-    letterSpacing: ".08em",
-    display: "inline-block",
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className={`ec-nav ${scrolled ? "scrolled" : ""}`}>
-      <div className="container ec-nav-inner">
-        {/* Brand */}
-        <Link to="/" aria-label="The Event Collective" style={{ textDecoration: "none", color: "inherit" }}>
-          <strong style={{ letterSpacing: ".08em" }}>THE EVENT COLLECTIVE</strong>
-        </Link>
+    <header className="fixed top-0 left-0 w-full h-16 bg-[#faf9f7] border-b border-gray-300 flex items-center justify-between px-6 md:px-12 z-50">
+      <h1 className="text-lg font-serif tracking-wide">THE EVENT COLLECTIVE</h1>
 
-        {/* Primary nav as uniform pill buttons */}
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-          <NavLink to="/" end style={pill}>HOME</NavLink>
-          <NavLink to="/services" style={pill}>SERVICES</NavLink>
-          <NavLink to="/gallery" style={pill}>GALLERY</NavLink>
-          <NavLink to="/reviews" style={pill}>REVIEWS</NavLink>
-          <NavLink to="/contact" style={pill}>CONTACT</NavLink>
+      {/* Desktop Navigation */}
+      <nav className="hidden md:flex items-center gap-6">
+        <Link to="/" className="hover:text-[var(--ec-accent)] transition-colors">Home</Link>
+        <Link to="/services" className="hover:text-[var(--ec-accent)] transition-colors">Services</Link>
+        <Link to="/gallery" className="hover:text-[var(--ec-accent)] transition-colors">Gallery</Link>
+        <Link to="/reviews" className="hover:text-[var(--ec-accent)] transition-colors">Reviews</Link>
+        <Link to="/contact" className="hover:text-[var(--ec-accent)] transition-colors">Contact</Link>
+        <a href="/contact" className="ml-4 border border-current px-4 py-2 rounded-full hover:bg-[var(--ec-accent)] hover:text-white transition-colors">Inquire</a>
+        <Link to="/login" className="hover:text-[var(--ec-accent)] transition-colors">Login</Link>
+        <Link to="/register" className="hover:text-[var(--ec-accent)] transition-colors">Sign Up</Link>
+      </nav>
 
-          {/* Inquire emphasized */}
-          <a
-            className="cta-btn"
-            href="/contact"
-            aria-label="Inquire"
-            style={{ padding: "10px 16px", borderRadius: 999 }}
-          >
-            INQUIRE
-          </a>
+      {/* Mobile Menu Toggle */}
+      <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden flex flex-col justify-center items-center focus:outline-none">
+        <div className="w-6 h-0.5 bg-current mb-1" />
+        <div className="w-6 h-0.5 bg-current mb-1" />
+        <div className="w-6 h-0.5 bg-current" />
+      </button>
 
-          {/* Auth controls */}
-          {user ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span className="muted" style={{ fontSize: 13 }}>Hi, {user.name || user.email}</span>
-              <button
-                onClick={() => { logout(); location.href = "/"; }}
-                style={{ background: "transparent", border: 0, cursor: "pointer", textDecoration: "underline", fontSize: 13 }}
-                aria-label="Logout"
-              >Logout</button>
-              {user.role === "admin" && (
-                <NavLink to="/admin" style={{ ...pill, padding: "6px 10px", fontSize: 13 }}>ADMIN</NavLink>
-              )}
-              <NavLink to="/dashboard" style={{ ...pill, padding: "6px 10px", fontSize: 13 }}>DASHBOARD</NavLink>
-            </div>
-          ) : (
-            <div style={{ display: "flex", gap: 8 }}>
-              <NavLink to="/login" style={{ ...pill, padding: "6px 10px", fontSize: 13 }}>LOGIN</NavLink>
-              <NavLink to="/register" style={{ ...pill, padding: "6px 10px", fontSize: 13 }}>SIGN&nbsp;UP</NavLink>
-            </div>
-          )}
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="absolute top-16 left-0 w-full bg-[#faf9f7] border-t border-gray-300 flex flex-col items-center py-4 md:hidden animate-fadeIn">
+          <Link to="/" className="py-2" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link to="/services" className="py-2" onClick={() => setMenuOpen(false)}>Services</Link>
+          <Link to="/gallery" className="py-2" onClick={() => setMenuOpen(false)}>Gallery</Link>
+          <Link to="/reviews" className="py-2" onClick={() => setMenuOpen(false)}>Reviews</Link>
+          <Link to="/contact" className="py-2" onClick={() => setMenuOpen(false)}>Contact</Link>
+          <a href="/contact" className="py-2 border border-current px-4 mt-2 rounded-full hover:bg-[var(--ec-accent)] hover:text-white transition-colors" onClick={() => setMenuOpen(false)}>Inquire</a>
+          <Link to="/login" className="py-2" onClick={() => setMenuOpen(false)}>Login</Link>
+          <Link to="/register" className="py-2" onClick={() => setMenuOpen(false)}>Sign Up</Link>
         </div>
-      </div>
-    </nav>
+      )}
+    </header>
   );
 }
