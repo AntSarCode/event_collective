@@ -13,3 +13,6 @@ def create_review(db: Session, review_in: ReviewCreate) -> Review:
 
 def get_all_reviews(db: Session) -> List[Review]:
     return db.query(Review).order_by(Review.created_at.desc()).all()
+
+def get_featured_reviews(db: Session, limit: int = 5):
+    return db.query(Review).order_by(Review.created_at.desc()).limit(limit).all()

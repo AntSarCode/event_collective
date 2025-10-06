@@ -20,7 +20,7 @@ def create_service(db: Session, service_in: ServiceCreate) -> Service:
         db.commit()
     except IntegrityError:
         db.rollback()
-        # Re-raise so the router or error handler can return a 409/400 as appropriate
+        # Re-raise so the router or error handler can return a 409/400
         raise
     db.refresh(service)
     return service
@@ -44,3 +44,10 @@ def delete_service(db: Session, service_id: int) -> bool:
     db.delete(svc)
     db.commit()
     return True
+
+
+def get_featured_services_for_home(db: Session, limit: int = 3):
+    # Update query if boolean flag is added.
+    q = db.query(Service)
+    q = q.order_by(Service.category.asc().nulls_last(), Service.id.asc())
+    return q.limit(limit).all()

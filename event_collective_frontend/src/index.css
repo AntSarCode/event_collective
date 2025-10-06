@@ -71,3 +71,12 @@ footer{padding:56px 0;border-top:1px solid var(--ec-line);background:#fff}
   .hero-title{font-size:36px}
   .hero-script{font-size:44px}
 }
+
+:root{
+  --ec-bg: #f7f6f3;   /* off white */
+  --ec-fg: #1a1a1a;   /* near black */
+  /* swap to taupe by changing fg/bg if client chooses */
+}
+
+html, body, #root { height: 100%; }
+body { background: var(--ec-bg); color: var(--ec-fg); }

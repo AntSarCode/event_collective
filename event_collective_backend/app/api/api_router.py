@@ -3,10 +3,11 @@ from app.api.routes import (
     auth, dashboard, gallery, services, reviews,
     contact, admin_calendar, admin_messages, health
 )
-
+from app.api.routes.public import home as home_public
 api_router = APIRouter()
 
 # Public
+api_router.include_router(home_public.router)
 api_router.include_router(auth.router)
 api_router.include_router(gallery.router)
 api_router.include_router(services.router)

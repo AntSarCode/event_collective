@@ -1,52 +1,42 @@
-import logoUrl from "../assets/event-collective-logo.png";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import LeftRailNav from "../components/LeftRailNav";
+import Hero from "../components/Hero";
+import AboutBlurb from "../components/AboutBlurb";
+import FeatureCards from "../components/FeatureCards";
+import GalleryMarquee from "../components/GalleryMarquee";
+import SocialBar from "../components/SocialBar";
+import { fetchHome, type HomePayload } from "../lib/api";
 
 export default function Home() {
-  return (
-    <>
-      {/* Hero with logo */}
-      <header className="hero">
-        <div className="container" style={{ textAlign: "center" }}>
-          <img
-            src={logoUrl}
-            alt="The Event Collective logo"
-            style={{ width: 260, maxWidth: "80%", height: "auto", opacity: 0.98 }}
-          />
-          <h1 className="hero-title">Curating Timeless Experiences</h1>
-          <div className="hero-script">Weddings • Corporate • Private</div>
-          <p className="hero-sub" style={{ margin: "18px auto 0" }}>
-            Boutique planning and design with a refined, modern sensibility. We orchestrate memorable
-            gatherings with meticulous detail and calm execution.
-          </p>
-          <a className="cta-btn" href="/contact">Inquire Now</a>
-        </div>
-      </header>
+  const [data, setData] = useState<HomePayload | null>(null);
+  const [err, setErr] = useState<string | null>(null);
 
-      {/* Quick links */}
-      <section aria-labelledby="quicklinks-title">
-        <div className="container">
-          <h2 id="quicklinks-title" style={{ fontFamily: '"Playfair Display",serif', fontSize: 24, marginBottom: 18 }}>
-            Explore
-          </h2>
-          <div className="features">
-            <Link to="/gallery" className="feature-card" style={{ textDecoration: "none", color: "inherit" }}>
-              <div aria-hidden style={{ width: 44, height: 2, background: "var(--ec-accent)", marginBottom: 14 }} />
-              <h3 className="feature-title">Gallery</h3>
-              <p className="feature-desc">See highlights from past events.</p>
-            </Link>
-            <Link to="/services" className="feature-card" style={{ textDecoration: "none", color: "inherit" }}>
-              <div aria-hidden style={{ width: 44, height: 2, background: "var(--ec-accent)", marginBottom: 14 }} />
-              <h3 className="feature-title">Services</h3>
-              <p className="feature-desc">Browse packages and pricing ranges.</p>
-            </Link>
-            <Link to="/reviews" className="feature-card" style={{ textDecoration: "none", color: "inherit" }}>
-              <div aria-hidden style={{ width: 44, height: 2, background: "var(--ec-accent)", marginBottom: 14 }} />
-              <h3 className="feature-title">Reviews</h3>
-              <p className="feature-desc">Read testimonials from clients.</p>
-            </Link>
-          </div>
-        </div>
-      </section>
-    </>
+  useEffect(() => {
+    fetchHome().then(setData).catch(e => setErr(String(e)));
+  }, []);
+
+  if (err) return <div className="pl-24 md:pl-32 py-10 text-red-500">Failed to load home: {err}</div>;
+  if (!data) return <div className="pl-24 md:pl-32 py-10">Loading…</div>;
+
+  const s = data.settings ?? {
+    brand_palette: "offwhite_black",
+    hero_title: "The Event Collective",
+    hero_subtitle: "Modern, classy coordination & rentals.",
+    cta_text: "Inquire",
+    cta_href: "/contact",
+    fb_url: "", ig_url: "", tiktok_url: ""
+  };
+
+  return (
+    <div className="relative">
+      <LeftRailNav items={data.nav} />
+      <main className="ml-20 md:ml-28">
+        <Hero title={s.hero_title} subtitle={s.hero_subtitle} ctaText={s.cta_text} ctaHref={s.cta_href} />
+        <AboutBlurb />
+        <FeatureCards services={data.services} />
+        <GalleryMarquee images={data.gallery.map(g => ({ id:g.id, url:g.url, alt_text:g.alt_text }))} />
+        <SocialBar fb={s.fb_url} ig={s.ig_url} tt={s.tiktok_url} />
+      </main>
+    </div>
   );
 }

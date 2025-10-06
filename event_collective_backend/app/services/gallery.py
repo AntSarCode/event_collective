@@ -17,3 +17,6 @@ def save_image(db: Session, file) -> GalleryImage:
 
 def get_all_images(db: Session) -> List[GalleryImage]:
     return db.query(GalleryImage).order_by(GalleryImage.uploaded_at.desc()).all()
+
+def get_homepage_strip(db: Session, limit: int = 18):
+    return db.query(GalleryImage).order_by(GalleryImage.uploaded_at.desc()).limit(limit).all()
